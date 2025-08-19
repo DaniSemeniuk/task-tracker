@@ -1,6 +1,9 @@
+"""Main script"""
+
 import argparse
 import json
 from datetime import datetime
+import args_functions
 
 
 # creation of argument parser
@@ -26,7 +29,6 @@ exclusive_args.add_argument(
 
 # parse arguments
 args = parser.parse_args()
-# print(args)
 
 # basic data structure
 data = {"count": 1, "tasks": {}}
@@ -48,8 +50,7 @@ if args.add:
         "updateAt": datetime.now().isoformat(),
     }
     data["count"] += 1
-    with open("DB.json", "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=4, ensure_ascii=False, sort_keys=True)
+    args_functions.dump(data)
     exit(1)
 
 # LIST funcionality
@@ -82,7 +83,7 @@ if args.update:
         data["tasks"][task_id]["description"] = task_desc
         data["tasks"][task_id]["updateAt"] = datetime.now().isoformat()
         with open("DB.json", "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=4, ensure_ascii=False, sort_keys=True)
+            args_functions.dump(data)
     except KeyError:
         print("That id doesn't exist")
         exit(1)
