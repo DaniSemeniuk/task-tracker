@@ -26,6 +26,7 @@ exclusive_args.add_argument(
 
 # parse arguments
 args = parser.parse_args()
+# print(args)
 
 # basic data structure
 data = {"count": 1, "tasks": {}}
@@ -69,3 +70,19 @@ if args.list:
         for task in listing:
             print(task)
     exit(1)
+
+# UPDATE funcionality
+if args.update:
+    task_id = args.update[0]
+    task_desc = args.update[1]
+    if not task_id.isnumeric():
+        raise ValueError("Usage: --update id[int] new_task[str]")
+
+    try:
+        data["tasks"][task_id]["description"] = task_desc
+        data["tasks"][task_id]["updateAt"] = datetime.now().isoformat()
+        with open("DB.json", "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=4, ensure_ascii=False, sort_keys=True)
+    except KeyError:
+        print("That id doesn't exist")
+        exit(1)
